@@ -66,6 +66,7 @@ async def get_tg_clients() -> list[Client]:
 async def process() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--action', type=int, help='Action to perform')
+    parser.add_argument('-d', '--debug', type=bool, default=False, help='Enable logger debug mode')
 
     logger.info(f"Detected {len(get_session_names())} sessions | {len(get_proxies())} proxies")
 
@@ -91,6 +92,12 @@ async def process() -> None:
         tg_clients = await get_tg_clients()
 
         await run_tasks(tg_clients=tg_clients)
+
+    debug = parser.parse_args().debug
+
+    if (debug is not None):
+        logger.level("DEBUG")
+        logger.debug("Enable DEBUG mode", debug)
 
 
 async def run_tasks(tg_clients: list[Client]):
